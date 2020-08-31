@@ -1,14 +1,19 @@
 from openpyxl import load_workbook
 import sys
+import xlwings as xw
+
+
 
 input_accept = False
 godzilla_parts_workbook ='parts_list.xlsx'
 
 # Lets have some class and make a class, rather than having a nasty long script that does everything...all puns intended of course
 class excelomator:
-    # Initialize the workbook and excel sheet we're working on
+    # Initialize the workbook and excel sheet we're working on. The wbxl is to get evaluated formulae (the values) for cells
+    # that contain formulas. OpenPyXL returns the formula as a string as the the value...?!
     def __init__(self,wbook):
         self.godzilla_workbook = load_workbook(wbook)
+        self.godzilla_wbxl = xw.Book(wbook)
         self.ws = self.godzilla_workbook.active
 
     # This method will ask for the part, check if it's correct, and then add it to the spreadsheet. On the spreadsheet columns 2,3,4
@@ -66,8 +71,7 @@ class excelomator:
 
     # See the sad truth on how much I've spent
     def check_damage(self):
-        money_spent = self.ws.cell(5,6).value
-        print("You've spent way too much: ${}".format(money_spent))
+        print("\nPrepare yourself....: {}".format(self.godzilla_wbxl.sheets['Sheet1'].range('F5').value))
 
     # Dictionary to decide which method to run.
     def chooser(self,choice):
